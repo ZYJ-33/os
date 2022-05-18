@@ -38,8 +38,7 @@ sd t2, 2*8(sp)
 mv a0, sp
 call trap_handler
 
-__trapret:               // a0 point to context and a1 point to kernelstack
-mv sp, a0
+__trapret:        
 
 ld t0, 32*8(sp)
 ld t1, 33*8(sp)

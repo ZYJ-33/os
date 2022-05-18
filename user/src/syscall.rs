@@ -1,7 +1,10 @@
 use core::arch::asm;
 
 const WRITE : usize = 64;
-const EXIT :usize = 93;
+const EXIT : usize = 93;
+const YIELD : usize = 124;
+const GET_TIME : usize = 169;
+
 
 fn syscall(id:usize, args:[usize; 3]) -> isize
 {
@@ -29,3 +32,14 @@ pub fn sys_exit(status : isize) -> !
     syscall(EXIT, [status as usize, 0, 0]);
     panic!("should not reach here in exit");
 }
+
+pub fn sys_yield() -> isize
+{
+    syscall(YIELD, [0, 0, 0])
+}
+
+pub fn sys_gettime() -> usize
+{
+    syscall(GET_TIME, [0, 0, 0]) as usize
+}
+

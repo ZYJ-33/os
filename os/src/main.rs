@@ -10,18 +10,22 @@ mod sbi;
 #[macro_use]
 mod console;
 mod sync;
-mod batch;
+mod task;
 mod trap;
 mod syscall;
-use crate::{sbi::shutdown, console::print};
+mod config;
+mod loader;
+mod timer;
+
+use crate::console::print;
 use trap::init as trap_init;
-pub use batch::{init as proc_init, run_app};
-pub use syscall::sys_call;
-use::core::arch::global_asm;
+use loader::init as loader_init;
+use syscall::sys_call;
+use core::arch::global_asm;
+use task::run;
 
 global_asm!(include_str!("entry.asm"));
 global_asm!(include_str!("app.S"));
-
 
 fn clear_bss()
 {
@@ -41,7 +45,6 @@ pub fn rust_main() -> !
 {
     clear_bss();
     trap_init();
-    proc_init();
-    run_app();    
+    loader_init();
+    run();
 }
-

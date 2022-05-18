@@ -10,8 +10,7 @@ pub mod console;
 mod syscall;
 mod lang_items;
 
-pub use syscall::sys_write;
-pub use syscall::sys_exit;
+pub use syscall::*;
 
 fn clean_bss()
 {
@@ -57,4 +56,14 @@ pub fn write(fd:usize, buf:&[u8]) -> isize
 pub fn exit(status:isize) -> !
 {
     sys_exit(status)
+}
+
+pub fn get_time() -> usize
+{
+    sys_gettime()
+}
+
+pub fn yield_() -> isize
+{
+    sys_yield()
 }

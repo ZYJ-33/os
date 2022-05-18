@@ -1,9 +1,19 @@
 pub mod context;
-use riscv::register::{ 
-    scause::{self, Exception, Trap, Scause},
+use riscv::register::
+{ 
+    scause::
+    {
+        self,
+        Exception, 
+        Trap,
+        Scause, Interrupt,
+    },
     stval, stvec, sstatus,
-    };
-use crate::{run_app, sys_call};
+};
+
+use crate::syscall::sys_call;
+use crate::task::{exit, suspend};
+use crate::timer::set_next_timer_intr_in_ms;
 use context::Context;
 use core::arch::global_asm;
 
@@ -27,6 +37,7 @@ fn trap_handler(ctx :&mut Context) -> &mut Context
     let val = stval::read();
     let scause = scause::read();
     let mut ss = sstatus::read();
+    /*
     match ss.spp()
     {
         sstatus::SPP::User =>
@@ -48,6 +59,8 @@ fn trap_handler(ctx :&mut Context) -> &mut Context
             }
         }
     }
+    */
+
 
     match scause.cause() 
     {
@@ -59,12 +72,18 @@ fn trap_handler(ctx :&mut Context) -> &mut Context
         Trap::Exception(Exception::StoreFault) =>
         {
             println!("store fault");
-            run_app();
+            exit();
         }
         Trap::Exception(Exception::IllegalInstruction) =>
         {
             println!("illegal inst");
-            run_app();
+            exit();
+        }
+        Trap::Interrupt(Interrupt::SupervisorTimer) =>
+        {
+            set_next_timer_intr_in_ms(10);
+            println!("timer interupt happen");
+            suspend();
         }
         _  =>
         {

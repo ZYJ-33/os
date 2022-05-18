@@ -1,11 +1,16 @@
+mod proc;
 mod fs;
 use fs::sys_write;
-use crate::batch::run_app;
+use proc::{sys_yield, sys_exit};
+use crate::timer::get_time_in_ms;
 
 const WRITE : usize = 64;
 const EXIT : usize = 93;
+const YIELD : usize = 124;
+const GET_TIME : usize = 169;
 
-pub fn sys_call(call_num: usize, args: [usize ; 3]) -> isize
+
+pub fn sys_call(call_num: usize, args: [usize; 3]) -> isize
 {
     match call_num
     {
@@ -15,12 +20,20 @@ pub fn sys_call(call_num: usize, args: [usize ; 3]) -> isize
         },
         EXIT => 
         {
-            run_app();
-            panic!("should not reach here in exit call");
+            sys_exit();
         },
-        _ =>{
+        YIELD =>
+        {
+            sys_yield();
+            0
+        },
+        GET_TIME =>
+        {
+            get_time_in_ms() as isize            
+        },
+        _ =>
+        {
             panic!("did not support syscall {}", call_num)
         },
     }
-        
 }
