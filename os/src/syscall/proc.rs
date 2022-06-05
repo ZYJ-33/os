@@ -1,3 +1,4 @@
+/*
 use crate::task::{exit, suspend};
 
 pub fn sys_exit() -> !
@@ -9,4 +10,5 @@ pub fn sys_yield()
 {
     suspend()
 }
+*/
 

@@ -1,7 +1,7 @@
 mod proc;
 mod fs;
 use fs::sys_write;
-use proc::{sys_yield, sys_exit};
+use crate::task::{exit as sys_exit, suspend as sys_yield};
 use crate::timer::get_time_in_ms;
 
 const WRITE : usize = 64;
@@ -20,7 +20,7 @@ pub fn sys_call(call_num: usize, args: [usize; 3]) -> isize
         },
         EXIT => 
         {
-            sys_exit();
+            sys_exit()
         },
         YIELD =>
         {

@@ -11,7 +11,7 @@ OBJ_DUMP := rust-objdump --arch-name=riscv64
 OBJ_COPY := rust-objcopy --binary-architecture=riscv64
 
 elf:
-	@python3 build.py
+	@cargo build --$(MODE)
 
 binary: elf
 	$(foreach elf, $(APPS_ELFS), $(OBJ_COPY) $(elf) --strip-all -O binary $(patsubst $(TARGET_DIR)/%, $(TARGET_DIR)/%.bin,$(elf));)
@@ -20,4 +20,4 @@ clean:
 	cargo clean
 	rm $(APPS_ELFS) $(APPS_BINS)
 
-build: binary
+build: elf

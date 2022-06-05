@@ -15,21 +15,23 @@ OBJ_DUMP := rust-objdump --arch-name=riscv64
 OBJ_COPY := rust-objcopy --binary-architecture=riscv64
 DIS_FLAG := -d
 
-
 ifeq ($(BOARD), k210)
 		KERNEL_START_ADDR := 0x80020000
 else ifeq($(BOARD), qemu)
 		KERNEL_START_ADDR := 0x80200000
 endif
 
-
-QEMU_PARA := -machine virt -nographic -bios $(BIOS) -device loader,file=$(BIN),addr=$(KERNEL_START_ADDR)
+QEMU_PARA := -machine virt -nographic -bios $(BIOS)  -device loader,file=$(BIN),addr=$(KERNEL_START_ADDR)
 
 user:
 	cd ../user && make build
 
 kernel: user
+ifeq ($(MODE), debug)
+	cargo build
+else
 	cargo build --$(MODE)
+endif 
 
 $(BIN): kernel
 	@$(OBJ_COPY) $(ELF) --strip-all -O binary $@

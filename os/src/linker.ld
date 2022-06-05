@@ -15,6 +15,14 @@ SECTIONS
     . = ALIGN(4K);
     etext = .;
 
+    strapframe = .;
+    .trapframe :
+    {
+        *(.trapframe)
+    }
+    . = ALIGN(4K);
+    etrapframe = .;
+
     srodata = .;
     .rodata : {
         *(.rodata .rodata.*)
@@ -23,9 +31,11 @@ SECTIONS
     . = ALIGN(4K);
     erodata = .;
 
+    sdata = .;
     .data : {
+        sker_stack = .;
         *(.data.stack)
-        sdata = .;
+        eker_stack = .;
         *(.data .data.*)
         *(.sdata .sdata.*)
     }

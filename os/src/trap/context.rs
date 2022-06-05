@@ -1,11 +1,17 @@
 use riscv::register::sstatus::{self, Sstatus, SPP};
+use crate::config::TRAPFRAME;
+use super::trap_handler;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Context
 {
     pub regs : [usize; 32],
-    pub sstatus : Sstatus,
     pub sepc : usize,
+    pub sstatus : Sstatus,
+    pub pgt : usize,
+    pub kernel_stack : usize,
+    pub handler : usize,
+    pub trapframe : usize, //in user addr
 }
 
 impl Context
@@ -15,17 +21,21 @@ impl Context
         self.regs[2] = sp;
     }
 
-    pub fn new(ret_addr: usize, stack_pointer: usize) -> Self
+    pub fn new(ret_addr: usize, user_stack: usize, pgt: usize, kernel_stack: usize) -> Self
     {
         let mut ss = sstatus::read();
         ss.set_spp(SPP::User);
         let mut c = Context
         {
             regs : [0; 32],
-            sstatus: ss,
             sepc: ret_addr,
+            sstatus: ss,
+            pgt,
+            kernel_stack,
+            handler : trap_handler as usize,
+            trapframe: TRAPFRAME, 
         };
-        c.set_sp(stack_pointer);
+        c.set_sp(user_stack);
         c
     }
 }

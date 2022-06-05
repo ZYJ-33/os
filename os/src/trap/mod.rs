@@ -10,58 +10,78 @@ use riscv::register::
     },
     stval, stvec, sstatus,
 };
-
-use crate::syscall::sys_call;
-use crate::task::{exit, suspend};
+use crate::{syscall::sys_call, mm::{output_virpage_entry, VirPage}};
+use crate::task::{exit, suspend, get_current_task_ctx,get_current_task_satp, get_current_task_pgt};
 use crate::timer::set_next_timer_intr_in_ms;
 use context::Context;
-use core::arch::global_asm;
+use crate::config::{TRAMPOLINE, TRAPFRAME};
+use core::arch::asm;
 
-global_asm!(include_str!("trap.S"));
+extern "C"
+{
+    fn trampoline();
+    fn usertrap();
+    fn usertrap_end();
+    fn trapret(ptr: *mut Context);
+    fn trapret_end();
+    fn trampoline_end();
+}
 
 pub fn init()
 {
-    extern "C"
-    {
-        fn __usertrap();
-    }
     unsafe
     {
-        stvec::write(__usertrap as usize, stvec::TrapMode::Direct);
+        let usertrap_tram = TRAMPOLINE + (usertrap as usize - trampoline as usize);
+        stvec::write(usertrap_tram, stvec::TrapMode::Direct);
     }
 }
 
 #[no_mangle]
-fn trap_handler(ctx :&mut Context) -> &mut Context
+pub fn before_trapret()
+{ 
+    let ctx = get_current_task_ctx();
+    let trapret_func : fn(usize, usize) -> ! =
+    unsafe
+    {
+        core::mem::transmute(
+            (TRAMPOLINE + (trapret as usize - trampoline as usize)) as *const fn(*mut Context)
+        )
+    };
+    let satp = get_current_task_satp();
+    let root = get_current_task_pgt();
+    
+    unsafe
+    {
+        asm!("fence.i");
+        trapret_func(TRAPFRAME, get_current_task_satp())
+    }
+}
+
+#[no_mangle]
+pub fn trap_handler()
 {
+    let ctx_ptr = get_current_task_ctx() as *mut Context;
+    let mut ctx = 
+    unsafe
+    {
+        ctx_ptr.as_mut().unwrap()
+    };
     let val = stval::read();
     let scause = scause::read();
-    let mut ss = sstatus::read();
-    /*
+    let mut ss = sstatus::Sstatus::from(ctx.sstatus);
+    
     match ss.spp()
     {
         sstatus::SPP::User =>
         {
-            ()
+
         }
         sstatus::SPP::Supervisor =>
         {
-            match scause.cause()
-            {
-                Trap::Exception(Exception::IllegalInstruction) =>
-                {
-                    println!("illegal instr");
-                }
-                _ =>
-                {
-                    panic!("unknown")
-                }
-            }
+            panic!("got a trap from supervisor mod");
         }
     }
-    */
-
-
+    
     match scause.cause() 
     {
         Trap::Exception(Exception::UserEnvCall) =>
@@ -94,6 +114,5 @@ fn trap_handler(ctx :&mut Context) -> &mut Context
                 );
         }
     }
-
-    ctx
+    before_trapret();
 }

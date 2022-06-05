@@ -3,7 +3,7 @@
 #![feature(global_asm)]
 #![feature(asm)]
 #![feature(panic_info_message)]
-
+#![feature(alloc_error_handler)]
 
 mod lang_items;
 mod sbi;
@@ -16,16 +16,25 @@ mod syscall;
 mod config;
 mod loader;
 mod timer;
+mod mm;
 
 use crate::console::print;
 use trap::init as trap_init;
-use loader::init as loader_init;
-use syscall::sys_call;
+use core::arch::asm;
 use core::arch::global_asm;
 use task::run;
+use mm::init as mem_init;
+use mm::output_virpage_entry;
+use mm::test;
+use config::{TRAMPOLINE};
+extern "C"
+{
+    fn trampoline();
+}
 
 global_asm!(include_str!("entry.asm"));
 global_asm!(include_str!("app.S"));
+global_asm!(include_str!("./trap/trampoline.S"));
 
 fn clear_bss()
 {
@@ -45,6 +54,9 @@ pub fn rust_main() -> !
 {
     clear_bss();
     trap_init();
-    loader_init();
+    println!("hello world");
+    mem_init();
+    println!("back to world");
+    
     run();
 }
