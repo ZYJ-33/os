@@ -49,12 +49,10 @@ impl MemorySet
     pub fn push_area(&mut self, mut area: MemArea, data: Option<&[u8]>)
     {
         area.init_pages(&mut self.pgt);
-        
         if area.map_type ==  MapType::Indentical && data != None
         {
             panic!("try to put data in identical map");
         }
-        
         if let Some(bytes) = data 
         {
             area.copy_from_slice(&mut self.pgt, bytes);
@@ -101,6 +99,7 @@ impl MemorySet
             area.travel(&self.pgt);     
         }
     }
+
 }
 
 bitflags! 
@@ -265,8 +264,6 @@ pub fn kernel_mem_init()
         fn erodata();
         fn sdata();
         fn edata();
-        fn strapframe();
-        fn etrapframe();
         fn sbss();
         fn ebss();
         fn ekernel();
@@ -291,12 +288,6 @@ pub fn kernel_mem_init()
                                 (MemPermit::R | MemPermit::W), 
                                 MapType::Indentical);
 
-   output("trapframe", strapframe as usize, etrapframe as usize);   
-   let trapframe_area = MemArea::new(usize::into(strapframe as usize),
-                                usize::into(etrapframe as usize), 
-                                (MemPermit::R | MemPermit::W), 
-                                MapType::Indentical);
-
    output("bss", sbss as usize, ebss as usize);   
    let bss_area = MemArea::new(usize::into(sbss as usize),
                                 usize::into(ebss as usize), 
@@ -315,15 +306,13 @@ pub fn kernel_mem_init()
     kernel.push_area(rodata_area, None);
     println!("putting data");
     kernel.push_area(data_area, None);
-    println!("putting trapframe");
-    kernel.push_area(trapframe_area, None);
     println!("putting bss");
     kernel.push_area(bss_area, None);
     println!("putting mem");
     kernel.push_area(mem_area, None);
 }
 
-///(user_sp, entry_point, MemmorySet)
+///(entry_point, MemmorySet)
 pub fn to_prog(elf_data: &[u8]) -> (usize, MemorySet)
 {
     let mut res = MemorySet::new();

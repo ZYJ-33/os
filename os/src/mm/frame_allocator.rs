@@ -24,6 +24,11 @@ impl FrameTracker
             ppn,
         }
     }
+
+    pub fn ppn(&self) -> PhyPage
+    {
+        self.ppn
+    }
 }
 
 impl Drop for FrameTracker

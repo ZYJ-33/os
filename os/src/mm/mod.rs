@@ -5,7 +5,7 @@ mod pagetable;
 mod memory_set;
 
 pub use heap_allocator::{init as heap_init, heap_test};
-pub use frame_allocator::{init as frame_init, alloc};
+pub use frame_allocator::{init as frame_init, alloc, FrameTracker};
 pub use pagetable::{PageTableEntry, PageTable, get_arr_from_userspace};
 pub use addr::*;
 pub use memory_set::{to_prog, KERNEL_SPACE, MemorySet, kernel_mem_init, test};

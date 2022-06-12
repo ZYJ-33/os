@@ -232,12 +232,3 @@ pub fn get_arr_from_userspace(user_root: usize, user_src: usize, len: usize) -> 
     v
 }
 
-pub fn test()
-{
-    extern "C"
-    {
-        fn stext();
-    }
-    let ppn = PhyPage::from((stext as usize) >> 12);
-    PageTableEntry::new(ppn, PteFlags::V | PteFlags::R | PteFlags::W);
-}
