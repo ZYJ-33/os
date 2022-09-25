@@ -6,7 +6,7 @@ use bitflags::bitflags;
 use alloc::collections::BTreeMap;
 use alloc::vec::{self, Vec};
 use super::pagetable::PteFlags;
-use super::{VirPage, VirAddr, PageTable, PhyPage, alloc, StepOne};
+use super::{VirPage, VirAddr, PageTable, PhyPage, alloc, StepOne, PhyAddr};
 use super::addr::VirtPageRange;
 use super::frame_allocator::FrameTracker;
 use crate::config::{PAGE_SIZE, TRAMPOLINE, MEM_END, TRAPFRAME, USERSTACK_TOP, USERSTACK_BOTTOM, PAGE_BITS};
@@ -39,6 +39,21 @@ impl MemorySet
             pgt: PageTable::new(), 
             areas: Vec::new(),
         }
+    }
+    
+    pub fn fork_one(&self) -> Self
+    {
+        let mut pgt = PageTable::new();
+        let mut areas = Vec::new();
+        
+        for i in 0 .. self.areas.len()
+        {
+            let mut area = MemArea::from_exist(&self.areas[i]);
+            area.init_pages(&mut pgt);
+            area.copy_from_area(&self.areas[i]);
+        }
+
+        MemorySet { pgt, areas }
     }
 
     pub fn root_satp(&self) -> usize
@@ -133,6 +148,27 @@ pub struct MemArea
 
 impl MemArea
 {
+    pub fn from_exist(exist: &MemArea) -> MemArea
+    {
+       MemArea
+       {
+            range:exist.range,
+            permit:exist.permit,
+            map:BTreeMap::new(),
+            map_type:exist.map_type,
+       }
+    }
+
+    pub fn copy_from_area(&mut self, other: &MemArea)
+    {
+        for vpn in self.range
+        {
+            let src_ppn = other.map.get(&vpn).unwrap().ppn();
+            let dst_ppn = self.map.get(&vpn).unwrap().ppn();
+            copy_page(dst_ppn, src_ppn);
+        }
+    }
+
     pub fn travel(&self, pgt:&PageTable)
     {
         for vpn in self.range
@@ -194,7 +230,7 @@ impl MemArea
             {
                 if let None = self.map.remove(&vpn)
                 {
-                    panic!("in dealloc_page_for, try to dealloc a page that not exist in pagetable");
+                    panic!("in unmap_page_for, try to dealloc a page that not exist in pagetable");
                 }
                 else
                 {
@@ -350,6 +386,14 @@ pub fn to_prog(elf_data: &[u8]) -> (usize, MemorySet)
     (elf_header.pt2.entry_point() as usize, res)
 }
 
+pub fn copy_page(dst: PhyPage, src: PhyPage)
+{
+    let dst_addr = usize::from(PhyAddr::from(dst)) as *mut u8;
+    let src_addr = usize::from(PhyAddr::from(src)) as *const u8;
+    let dst_slice =unsafe{ core::slice::from_raw_parts_mut(dst_addr, PAGE_SIZE)} ;
+    let src_slice =unsafe {core::slice::from_raw_parts(src_addr, PAGE_SIZE)};
+    dst_slice.copy_from_slice(src_slice);
+}
 
 pub fn test()
 {

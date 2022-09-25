@@ -38,11 +38,24 @@ warning: type `up_safe_cell` should have an upper camel case name
   |
   = note: `#[warn(non_camel_case_types)]` on by default
 
-warning: unused import: `crate::loader::get_app`
-  --> src/task/task.rs:10:5
+warning: unused import: `VirPage`
+  --> src/task/task.rs:13:55
    |
-10 | use crate::loader::get_app;
-   |     ^^^^^^^^^^^^^^^^^^^^^^
+13 | use crate::mm::{MemorySet, to_prog, PhyPage, PhyAddr, VirPage, KERNEL_SPACE, FrameTracker, alloc, copy_page, VirAddr};
+   |                                                       ^^^^^^^
+
+warning: unnecessary parentheses around `for` iterator expression
+   --> src/task/task.rs:400:18
+    |
+400 |         for i in (0..task_inner.childrens.len())
+    |                  ^                             ^
+    |
+    = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+    |
+400 -         for i in (0..task_inner.childrens.len())
+400 +         for i in 0..task_inner.childrens.len()
+    | 
 
 warning: unused import: `Scause`
  --> src/trap/mod.rs:9:9
@@ -50,42 +63,59 @@ warning: unused import: `Scause`
 9 |         Scause, Interrupt,
   |         ^^^^^^
 
+warning: unused imports: `VirPage`, `output_virpage_entry`
+  --> src/trap/mod.rs:13:37
+   |
+13 | use crate::{syscall::sys_call, mm::{output_virpage_entry, VirPage}};
+   |                                     ^^^^^^^^^^^^^^^^^^^^  ^^^^^^^
+
 warning: unused import: `crate::config::*`
- --> src/loader.rs:1:5
+ --> src/loader.rs:4:5
   |
-1 | use crate::config::*;
+4 | use crate::config::*;
   |     ^^^^^^^^^^^^^^^^
 
-warning: unnecessary parentheses around assigned value
-  --> src/mm/frame_allocator.rs:55:25
+warning: unnecessary parentheses around `if` condition
+  --> src/loader.rs:28:15
    |
-55 |         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
-   |                         ^                                                     ^
+28 |             if(char == b'\0')
+   |               ^             ^
    |
-   = note: `#[warn(unused_parens)]` on by default
 help: remove these parentheses
    |
-55 -         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
-55 +         let mut start = (ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1);
+28 -             if(char == b'\0')
+28 +             if char == b'\0'
    | 
 
-warning: unused import: `PhyAddr`
- --> src/mm/pagetable.rs:4:22
+warning: unnecessary parentheses around assigned value
+  --> src/mm/frame_allocator.rs:60:25
+   |
+60 |         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
+   |                         ^                                                     ^
+   |
+help: remove these parentheses
+   |
+60 -         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
+60 +         let mut start = (ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1);
+   | 
+
+warning: unused import: `StepOne`
+ --> src/mm/pagetable.rs:5:49
   |
-4 | use super::{VirAddr, PhyAddr, VirPage, PhyPage, StepOne};
-  |                      ^^^^^^^
+5 | use super::{VirAddr, PhyAddr, VirPage, PhyPage, StepOne};
+  |                                                 ^^^^^^^
 
 warning: unused import: `FRAME_ALLOCATOR`
- --> src/mm/pagetable.rs:5:51
+ --> src/mm/pagetable.rs:6:51
   |
-5 | use super::frame_allocator::{alloc, FrameTracker, FRAME_ALLOCATOR};
+6 | use super::frame_allocator::{alloc, FrameTracker, FRAME_ALLOCATOR};
   |                                                   ^^^^^^^^^^^^^^^
 
-warning: unused imports: `PAGE_BITS`, `PAGE_SIZE`
-  --> src/mm/pagetable.rs:11:21
+warning: unused import: `PAGE_SIZE`
+  --> src/mm/pagetable.rs:12:21
    |
-11 | use crate::config::{PAGE_SIZE, PAGE_BITS};
-   |                     ^^^^^^^^^  ^^^^^^^^^
+12 | use crate::config::{PAGE_SIZE, PAGE_BITS};
+   |                     ^^^^^^^^^
 
 warning: unused import: `self`
  --> src/mm/memory_set.rs:7:18
@@ -93,71 +123,101 @@ warning: unused import: `self`
 7 | use alloc::vec::{self, Vec};
   |                  ^^^^
 
+warning: unused import: `crate::mm::output_virpage_entry`
+  --> src/mm/memory_set.rs:13:5
+   |
+13 | use crate::mm::output_virpage_entry;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 warning: unnecessary parentheses around function argument
-   --> src/mm/memory_set.rs:275:33
+   --> src/mm/memory_set.rs:312:33
     |
-275 | ...                   (MemPermit::R | MemPermit::X), 
+312 | ...                   (MemPermit::R | MemPermit::X), 
     |                       ^                           ^
     |
 help: remove these parentheses
     |
-275 -                                 (MemPermit::R | MemPermit::X), 
-275 +                                 MemPermit::R | MemPermit::X, 
+312 -                                 (MemPermit::R | MemPermit::X), 
+312 +                                 MemPermit::R | MemPermit::X, 
     | 
 
 warning: unnecessary parentheses around function argument
-   --> src/mm/memory_set.rs:281:33
+   --> src/mm/memory_set.rs:318:33
     |
-281 | ...                   (MemPermit::R), 
+318 | ...                   (MemPermit::R), 
     |                       ^            ^
     |
 help: remove these parentheses
     |
-281 -                                 (MemPermit::R), 
-281 +                                 MemPermit::R, 
+318 -                                 (MemPermit::R), 
+318 +                                 MemPermit::R, 
     | 
 
 warning: unnecessary parentheses around function argument
-   --> src/mm/memory_set.rs:287:33
+   --> src/mm/memory_set.rs:324:33
     |
-287 | ...                   (MemPermit::R | MemPermit::W), 
+324 | ...                   (MemPermit::R | MemPermit::W), 
     |                       ^                           ^
     |
 help: remove these parentheses
     |
-287 -                                 (MemPermit::R | MemPermit::W), 
-287 +                                 MemPermit::R | MemPermit::W, 
+324 -                                 (MemPermit::R | MemPermit::W), 
+324 +                                 MemPermit::R | MemPermit::W, 
     | 
 
 warning: unnecessary parentheses around function argument
-   --> src/mm/memory_set.rs:293:33
+   --> src/mm/memory_set.rs:330:33
     |
-293 | ...                   (MemPermit::R | MemPermit::W), 
+330 | ...                   (MemPermit::R | MemPermit::W), 
     |                       ^                           ^
     |
 help: remove these parentheses
     |
-293 -                                 (MemPermit::R | MemPermit::W), 
-293 +                                 MemPermit::R | MemPermit::W, 
+330 -                                 (MemPermit::R | MemPermit::W), 
+330 +                                 MemPermit::R | MemPermit::W, 
     | 
 
 warning: unnecessary parentheses around function argument
-   --> src/mm/memory_set.rs:299:33
+   --> src/mm/memory_set.rs:336:33
     |
-299 | ...                   (MemPermit::R | MemPermit::W), 
+336 | ...                   (MemPermit::R | MemPermit::W), 
     |                       ^                           ^
     |
 help: remove these parentheses
     |
-299 -                                 (MemPermit::R | MemPermit::W), 
-299 +                                 MemPermit::R | MemPermit::W, 
+336 -                                 (MemPermit::R | MemPermit::W), 
+336 +                                 MemPermit::R | MemPermit::W, 
     | 
+
+warning: unused import: `crate::config::TRAMPOLINE`
+  --> src/mm/mod.rs:12:5
+   |
+12 | use crate::config::TRAMPOLINE;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `core::arch::asm`
+  --> src/main.rs:23:5
+   |
+23 | use core::arch::asm;
+   |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `mm::output_virpage_entry`
+  --> src/main.rs:27:5
+   |
+27 | use mm::output_virpage_entry;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^
 
 warning: unused import: `mm::test`
-  --> src/main.rs:26:5
+  --> src/main.rs:28:5
    |
-26 | use mm::test;
+28 | use mm::test;
    |     ^^^^^^^^
+
+warning: unused import: `TRAMPOLINE`
+  --> src/main.rs:29:14
+   |
+29 | use config::{TRAMPOLINE};
+   |              ^^^^^^^^^^
 
 warning: the feature `asm` has been stable since 1.59.0 and no longer requires an attribute to enable
  --> src/main.rs:4:12
@@ -173,104 +233,124 @@ warning: the feature `global_asm` has been stable since 1.59.0 and no longer req
 3 | #![feature(global_asm)]
   |            ^^^^^^^^^^
 
-warning: unused variable: `user_stack_va`
-   --> src/task/task.rs:195:9
-    |
-195 |     let user_stack_va: usize;
-    |         ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_user_stack_va`
-    |
-    = note: `#[warn(unused_variables)]` on by default
-
-warning: variable does not need to be mutable
-   --> src/task/task.rs:244:13
-    |
-244 |         let mut tasks = self.tasks.access();
-    |             ----^^^^^
-    |             |
-    |             help: remove this `mut`
-    |
-    = note: `#[warn(unused_mut)]` on by default
-
-warning: variable does not need to be mutable
-  --> src/trap/mod.rs:57:9
+warning: unused variable: `ctx`
+  --> src/trap/mod.rs:42:9
    |
-57 |     let mut ss = sstatus::Sstatus::from(ctx.sstatus);
+42 |     let ctx = get_current_task_ctx();
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `satp`
+  --> src/trap/mod.rs:50:9
+   |
+50 |     let satp = get_current_task_satp();
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_satp`
+
+warning: unused variable: `root`
+  --> src/trap/mod.rs:51:9
+   |
+51 |     let root = get_current_task_pgt();
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_root`
+
+warning: unused variable: `i`
+  --> src/loader.rs:23:9
+   |
+23 |     for i in 0..count
+   |         ^ help: if this is intentional, prefix it with an underscore: `_i`
+
+warning: unused variable: `i`
+   --> src/task/task.rs:348:58
+    |
+348 |         let (index, _) = tasks.iter().enumerate().find(|(i, task)| task.pid == target.pid).unwrap();
+    |                                                          ^ help: if this is intentional, prefix it with an underscore: `_i`
+
+warning: unused variable: `begin`
+   --> src/mm/pagetable.rs:252:9
+    |
+252 |     let begin = str_src;
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_begin`
+
+error[E0507]: cannot move out of dereference of `RefMut<'_, TaskInner>`
+   --> src/task/task.rs:308:15
+    |
+308 |             *(task_inner.mem.unwrap()
+    |               ^^^^^^^^^^^^^^ move occurs because value has type `Option<MemorySet>`, which does not implement the `Copy` trait
+    |
+help: consider borrowing the `Option`'s content
+    |
+308 |             *(task_inner.mem.as_ref().unwrap()
+    |                             +++++++++
+
+warning: variable does not need to be mutable
+  --> src/trap/mod.rs:71:9
+   |
+71 |     let mut ss = sstatus::Sstatus::from(ctx.sstatus);
    |         ----^^
    |         |
    |         help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` on by default
 
 warning: variable does not need to be mutable
-  --> src/mm/frame_allocator.rs:55:13
+  --> src/mm/frame_allocator.rs:60:13
    |
-55 |         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
+60 |         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
    |             ----^^^^^
    |             |
    |             help: remove this `mut`
 
 warning: variable does not need to be mutable
-  --> src/mm/frame_allocator.rs:57:13
+  --> src/mm/frame_allocator.rs:62:13
    |
-57 |         let mut v = Vec::new();
+62 |         let mut v = Vec::new();
    |             ----^
    |             |
    |             help: remove this `mut`
 
+error[E0596]: cannot borrow `res` as mutable, as it is not declared as mutable
+   --> src/mm/pagetable.rs:264:13
+    |
+253 |     let res = String::new();
+    |         --- help: consider changing this to be mutable: `mut res`
+...
+264 |             res.push(ch.into());
+    |             ^^^^^^^^^^^^^^^^^^^ cannot borrow as mutable
+
 warning: variable does not need to be mutable
-   --> src/task/task.rs:147:8
-    |
-147 |    let mut tasks : [Task; APP_MAX_COUNT];
-    |        ----^^^^^
-    |        |
-    |        help: remove this `mut`
+  --> src/mm/memory_set.rs:47:13
+   |
+47 |         let mut areas = Vec::new();
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
 
-error[E0381]: borrow of possibly-uninitialized variable: `tasks`
-   --> src/task/task.rs:149:20
+warning: variable does not need to be mutable
+   --> src/mm/memory_set.rs:381:17
     |
-149 |    for (i,task) in tasks.iter_mut().enumerate()
-    |                    ^^^^^^^^^^^^^^^^ use of possibly-uninitialized `tasks`
-
-error[E0503]: cannot use `tasks` because it was mutably borrowed
-   --> src/task/task.rs:153:13
-    |
-149 |    for (i,task) in tasks.iter_mut().enumerate()
-    |                    ----------------------------
-    |                    |
-    |                    borrow of `tasks` occurs here
-    |                    borrow later used here
-...
-153 |             tasks[i] = Task::new_task();
-    |             ^^^^^^^^ use of borrowed `tasks`
-
-error[E0506]: cannot assign to `tasks[_]` because it is borrowed
-   --> src/task/task.rs:153:13
-    |
-149 |    for (i,task) in tasks.iter_mut().enumerate()
-    |                    ----------------------------
-    |                    |
-    |                    borrow of `tasks[_]` occurs here
-    |                    borrow later used here
-...
-153 |             tasks[i] = Task::new_task();
-    |             ^^^^^^^^ assignment to borrowed `tasks[_]` occurs here
+381 |             let mut area = MemArea::new(VirAddr::from(start), VirAddr::from(end), permit, MapType::Framed);
+    |                 ----^^^^
+    |                 |
+    |                 help: remove this `mut`
 
 warning: unnecessary `unsafe` block
-  --> src/loader.rs:19:5
+  --> src/loader.rs:56:5
    |
-19 |     unsafe
+56 |     unsafe
    |     ^^^^^^ unnecessary `unsafe` block
    |
    = note: `#[warn(unused_unsafe)]` on by default
 
 warning: unnecessary `unsafe` block
-  --> src/loader.rs:34:5
+  --> src/loader.rs:90:5
    |
-34 |     unsafe
+90 |     unsafe
    |     ^^^^^^ unnecessary `unsafe` block
 
 warning: unnecessary `unsafe` block
-  --> src/loader.rs:39:5
+  --> src/loader.rs:95:5
    |
-39 |     unsafe
+95 |     unsafe
    |     ^^^^^^ unnecessary `unsafe` block
 
 warning: unnecessary `unsafe` block
@@ -279,7 +359,34 @@ warning: unnecessary `unsafe` block
 9 |     unsafe
   |     ^^^^^^ unnecessary `unsafe` block
 
-Some errors have detailed explanations: E0381, E0503, E0506.
-For more information about an error, try `rustc --explain E0381`.
-warning: `kernel` (bin "kernel") generated 29 warnings
-error: could not compile `kernel` due to 3 previous errors; 29 warnings emitted
+warning: unnecessary `unsafe` block
+   --> src/task/task.rs:219:28
+    |
+209 | unsafe
+    | ------ because it's nested under this `unsafe` block
+...
+219 |            let app_total = unsafe { apps_ptr.read_volatile()}; 
+    |                            ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> src/task/task.rs:236:28
+    |
+209 | unsafe
+    | ------ because it's nested under this `unsafe` block
+...
+236 |                 init_task: unsafe {up_safe_cell::new(tmp)},
+    |                            ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> src/task/task.rs:237:25
+    |
+209 | unsafe
+    | ------ because it's nested under this `unsafe` block
+...
+237 |                 tasks : unsafe {up_safe_cell::new(inner_task_manager)},
+    |                         ^^^^^^ unnecessary `unsafe` block
+
+Some errors have detailed explanations: E0507, E0596.
+For more information about an error, try `rustc --explain E0507`.
+warning: `kernel` (bin "kernel") generated 45 warnings
+error: could not compile `kernel` due to 2 previous errors; 45 warnings emitted

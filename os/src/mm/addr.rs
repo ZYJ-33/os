@@ -108,6 +108,25 @@ impl PhyAddr
     {
         self.offset() == 0
     }
+
+    pub fn get_ref<T>(self) ->&'static T
+    {
+        let ptr = self.0 as usize as *const T;
+        unsafe
+        {
+            ptr.as_ref().unwrap()
+        }
+    }
+
+    pub fn get_mut<T>(self) ->&'static mut T
+    {
+        let ptr = self.0 as usize as *mut T;
+        unsafe
+        {
+            ptr.as_mut().unwrap()
+        }
+
+    }
 }
 
 

@@ -1,0 +1,1 @@
+/home/ubuntu/os_proj/user/target/riscv64gc-unknown-none-elf/release/01power_5: /home/ubuntu/os_proj/user/src/bin/01power_5.rs /home/ubuntu/os_proj/user/src/console.rs /home/ubuntu/os_proj/user/src/lang_items.rs /home/ubuntu/os_proj/user/src/lib.rs /home/ubuntu/os_proj/user/src/syscall.rs

@@ -1,5 +1,6 @@
 extern crate bitflags;
 extern crate alloc;
+use alloc::string::String;
 use bitflags::bitflags;
 use super::{VirAddr, PhyAddr, VirPage, PhyPage, StepOne};
 use super::frame_allocator::{alloc, FrameTracker, FRAME_ALLOCATOR};
@@ -9,6 +10,7 @@ use core::fmt::{Formatter, Debug};
 use core::option::Option;
 use core::usize;
 use crate::config::{PAGE_SIZE, PAGE_BITS};
+use crate::task::get_current_task_satp;
 
 bitflags! 
 {
@@ -123,6 +125,16 @@ impl PageTable
         }
     }
 
+    pub fn translate_va(&self, vir: VirAddr) -> Option<PhyAddr>
+    {
+        self.find(VirPage::from(vir))
+            .map(|pte| {
+            PhyAddr::from(
+                (usize::from(pte.ppn()) << PAGE_BITS)+ vir.offset()
+            )
+            })
+    }
+
     pub fn find(&self, vpn: VirPage) -> Option<&mut PageTableEntry>
     {
         let indexs = vpn.indexs();
@@ -199,7 +211,7 @@ impl PageTable
 
     pub fn translate(&self, vpn: VirPage) -> Option<PageTableEntry>
     {
-        self.find(vpn).map(|vp| {*vp})
+        self.find(vpn).map(|pte| {*pte})
     }
 }
 
@@ -232,3 +244,26 @@ pub fn get_arr_from_userspace(user_root: usize, user_src: usize, len: usize) -> 
     v
 }
 
+pub fn get_str_from_userspace(str_src: usize) -> String
+{
+    let user_root = get_current_task_satp();
+    let fake_pgt = PageTable::fake(user_root);
+    let mut cur = str_src;
+    let begin = str_src;
+    let mut res = String::new();
+    loop
+    {
+        let phyaddr = fake_pgt.translate_va(VirAddr::from(cur)).unwrap();
+        let ch :u8 = *(phyaddr.get_ref());
+        if ch == b'\0'
+        {
+            break;
+        }
+        else
+        {
+            res.push(ch.into());
+        }
+        cur = cur + 1;
+    }
+    res
+}

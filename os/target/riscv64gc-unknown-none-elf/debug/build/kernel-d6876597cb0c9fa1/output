@@ -1,0 +1,12 @@
+priv_instr
+store_fault
+00power_3
+03sleep
+helloworld
+01power_5
+02write_c
+power
+priv_reg
+00write_a
+02power_7
+01write_b

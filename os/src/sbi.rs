@@ -25,6 +25,12 @@ pub fn settimer(time: usize)
         sbi_call(SBI_SET_TIMER, time, 0, 0);        
 }
 
+pub fn console_getchar() -> usize
+{
+    sbi_call(SBI_CONSOLE_GETCHAR, 0, 0, 0)
+}
+
+
 #[inline(always)]
 fn sbi_call(which: usize, arg0: usize, arg1: usize, arg2: usize) -> usize {
     let mut ret;

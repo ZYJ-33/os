@@ -1,0 +1,729 @@
+    Checking kernel v0.1.0 (/home/ubuntu/os_proj/os)
+warning: unused import: `crate::println`
+ --> src/lang_items.rs:3:5
+  |
+3 | use crate::println;
+  |     ^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: trailing semicolon in macro used in expression position
+  --> src/console.rs:25:66
+   |
+25 |           $crate::console::print(format_args!($fmt $(, $($arg)+)?));
+   |                                                                    ^
+   |
+  ::: src/lang_items.rs:11:13
+   |
+11 | /             print!(
+12 | |             "Panicked at {}:{} {}",
+13 | |             location.file(),
+14 | |             location.line(),
+15 | |             _info.message().unwrap()
+16 | |             )
+   | |_____________- in this macro invocation
+   |
+   = note: `#[warn(semicolon_in_expressions_from_macros)]` on by default
+   = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+   = note: for more information, see issue #79813 <https://github.com/rust-lang/rust/issues/79813>
+   = note: macro invocations at the end of a block are treated as expressions
+   = note: to ignore the value produced by the macro, add a semicolon after the invocation of `print`
+   = note: this warning originates in the macro `print` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: type `up_safe_cell` should have an upper camel case name
+ --> src/sync/up.rs:3:12
+  |
+3 | pub struct up_safe_cell<T>
+  |            ^^^^^^^^^^^^ help: convert the identifier to upper camel case: `UpSafeCell`
+  |
+  = note: `#[warn(non_camel_case_types)]` on by default
+
+warning: unused import: `VirPage`
+  --> src/task/task.rs:13:55
+   |
+13 | use crate::mm::{MemorySet, to_prog, PhyPage, PhyAddr, VirPage, KERNEL_SPACE, FrameTracker, alloc, copy_page};
+   |                                                       ^^^^^^^
+
+warning: unnecessary parentheses around `for` iterator expression
+   --> src/task/task.rs:396:18
+    |
+396 |         for i in (0..task_inner.childrens.len())
+    |                  ^                             ^
+    |
+    = note: `#[warn(unused_parens)]` on by default
+help: remove these parentheses
+    |
+396 -         for i in (0..task_inner.childrens.len())
+396 +         for i in 0..task_inner.childrens.len()
+    | 
+
+warning: unused import: `Scause`
+ --> src/trap/mod.rs:9:9
+  |
+9 |         Scause, Interrupt,
+  |         ^^^^^^
+
+warning: unused imports: `VirPage`, `output_virpage_entry`
+  --> src/trap/mod.rs:13:37
+   |
+13 | use crate::{syscall::sys_call, mm::{output_virpage_entry, VirPage}};
+   |                                     ^^^^^^^^^^^^^^^^^^^^  ^^^^^^^
+
+warning: unused import: `crate::config::*`
+ --> src/loader.rs:4:5
+  |
+4 | use crate::config::*;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unnecessary parentheses around `if` condition
+  --> src/loader.rs:28:15
+   |
+28 |             if(char == b'\0')
+   |               ^             ^
+   |
+help: remove these parentheses
+   |
+28 -             if(char == b'\0')
+28 +             if char == b'\0'
+   | 
+
+warning: unnecessary parentheses around assigned value
+  --> src/mm/frame_allocator.rs:60:25
+   |
+60 |         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
+   |                         ^                                                     ^
+   |
+help: remove these parentheses
+   |
+60 -         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
+60 +         let mut start = (ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1);
+   | 
+
+warning: unused imports: `PhyAddr`, `StepOne`
+ --> src/mm/pagetable.rs:4:22
+  |
+4 | use super::{VirAddr, PhyAddr, VirPage, PhyPage, StepOne};
+  |                      ^^^^^^^                    ^^^^^^^
+
+warning: unused import: `FRAME_ALLOCATOR`
+ --> src/mm/pagetable.rs:5:51
+  |
+5 | use super::frame_allocator::{alloc, FrameTracker, FRAME_ALLOCATOR};
+  |                                                   ^^^^^^^^^^^^^^^
+
+warning: unused imports: `PAGE_BITS`, `PAGE_SIZE`
+  --> src/mm/pagetable.rs:11:21
+   |
+11 | use crate::config::{PAGE_SIZE, PAGE_BITS};
+   |                     ^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `self`
+ --> src/mm/memory_set.rs:7:18
+  |
+7 | use alloc::vec::{self, Vec};
+  |                  ^^^^
+
+warning: unused import: `crate::mm::output_virpage_entry`
+  --> src/mm/memory_set.rs:13:5
+   |
+13 | use crate::mm::output_virpage_entry;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unnecessary parentheses around function argument
+   --> src/mm/memory_set.rs:312:33
+    |
+312 | ...                   (MemPermit::R | MemPermit::X), 
+    |                       ^                           ^
+    |
+help: remove these parentheses
+    |
+312 -                                 (MemPermit::R | MemPermit::X), 
+312 +                                 MemPermit::R | MemPermit::X, 
+    | 
+
+warning: unnecessary parentheses around function argument
+   --> src/mm/memory_set.rs:318:33
+    |
+318 | ...                   (MemPermit::R), 
+    |                       ^            ^
+    |
+help: remove these parentheses
+    |
+318 -                                 (MemPermit::R), 
+318 +                                 MemPermit::R, 
+    | 
+
+warning: unnecessary parentheses around function argument
+   --> src/mm/memory_set.rs:324:33
+    |
+324 | ...                   (MemPermit::R | MemPermit::W), 
+    |                       ^                           ^
+    |
+help: remove these parentheses
+    |
+324 -                                 (MemPermit::R | MemPermit::W), 
+324 +                                 MemPermit::R | MemPermit::W, 
+    | 
+
+warning: unnecessary parentheses around function argument
+   --> src/mm/memory_set.rs:330:33
+    |
+330 | ...                   (MemPermit::R | MemPermit::W), 
+    |                       ^                           ^
+    |
+help: remove these parentheses
+    |
+330 -                                 (MemPermit::R | MemPermit::W), 
+330 +                                 MemPermit::R | MemPermit::W, 
+    | 
+
+warning: unnecessary parentheses around function argument
+   --> src/mm/memory_set.rs:336:33
+    |
+336 | ...                   (MemPermit::R | MemPermit::W), 
+    |                       ^                           ^
+    |
+help: remove these parentheses
+    |
+336 -                                 (MemPermit::R | MemPermit::W), 
+336 +                                 MemPermit::R | MemPermit::W, 
+    | 
+
+warning: unused import: `crate::config::TRAMPOLINE`
+  --> src/mm/mod.rs:12:5
+   |
+12 | use crate::config::TRAMPOLINE;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `core::arch::asm`
+  --> src/main.rs:23:5
+   |
+23 | use core::arch::asm;
+   |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `mm::output_virpage_entry`
+  --> src/main.rs:27:5
+   |
+27 | use mm::output_virpage_entry;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `mm::test`
+  --> src/main.rs:28:5
+   |
+28 | use mm::test;
+   |     ^^^^^^^^
+
+warning: unused import: `TRAMPOLINE`
+  --> src/main.rs:29:14
+   |
+29 | use config::{TRAMPOLINE};
+   |              ^^^^^^^^^^
+
+warning: the feature `asm` has been stable since 1.59.0 and no longer requires an attribute to enable
+ --> src/main.rs:4:12
+  |
+4 | #![feature(asm)]
+  |            ^^^
+  |
+  = note: `#[warn(stable_features)]` on by default
+
+warning: the feature `global_asm` has been stable since 1.59.0 and no longer requires an attribute to enable
+ --> src/main.rs:3:12
+  |
+3 | #![feature(global_asm)]
+  |            ^^^^^^^^^^
+
+warning: unused variable: `ctx`
+  --> src/trap/mod.rs:42:9
+   |
+42 |     let ctx = get_current_task_ctx();
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `satp`
+  --> src/trap/mod.rs:50:9
+   |
+50 |     let satp = get_current_task_satp();
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_satp`
+
+warning: unused variable: `root`
+  --> src/trap/mod.rs:51:9
+   |
+51 |     let root = get_current_task_pgt();
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_root`
+
+warning: unused variable: `i`
+  --> src/loader.rs:23:9
+   |
+23 |     for i in 0..count
+   |         ^ help: if this is intentional, prefix it with an underscore: `_i`
+
+warning: unused variable: `i`
+   --> src/task/task.rs:344:58
+    |
+344 |         let (index, _) = tasks.iter().enumerate().find(|(i, task)| task.pid == target.pid).unwrap();
+    |                                                          ^ help: if this is intentional, prefix it with an underscore: `_i`
+
+warning: variable does not need to be mutable
+  --> src/trap/mod.rs:71:9
+   |
+71 |     let mut ss = sstatus::Sstatus::from(ctx.sstatus);
+   |         ----^^
+   |         |
+   |         help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` on by default
+
+warning: variable does not need to be mutable
+  --> src/mm/frame_allocator.rs:60:13
+   |
+60 |         let mut start = ((ekernel as usize + PAGE_SIZE - 1) & !(PAGE_SIZE - 1));
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
+
+warning: variable does not need to be mutable
+  --> src/mm/frame_allocator.rs:62:13
+   |
+62 |         let mut v = Vec::new();
+   |             ----^
+   |             |
+   |             help: remove this `mut`
+
+warning: variable does not need to be mutable
+  --> src/mm/memory_set.rs:47:13
+   |
+47 |         let mut areas = Vec::new();
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
+
+warning: variable does not need to be mutable
+   --> src/mm/memory_set.rs:381:17
+    |
+381 |             let mut area = MemArea::new(VirAddr::from(start), VirAddr::from(end), permit, MapType::Framed);
+    |                 ----^^^^
+    |                 |
+    |                 help: remove this `mut`
+
+warning: unnecessary `unsafe` block
+  --> src/loader.rs:56:5
+   |
+56 |     unsafe
+   |     ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` on by default
+
+warning: unnecessary `unsafe` block
+  --> src/loader.rs:90:5
+   |
+90 |     unsafe
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+  --> src/loader.rs:95:5
+   |
+95 |     unsafe
+   |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+ --> src/timer.rs:9:5
+  |
+9 |     unsafe
+  |     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> src/task/task.rs:219:28
+    |
+209 | unsafe
+    | ------ because it's nested under this `unsafe` block
+...
+219 |            let app_total = unsafe { apps_ptr.read_volatile()}; 
+    |                            ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> src/task/task.rs:236:28
+    |
+209 | unsafe
+    | ------ because it's nested under this `unsafe` block
+...
+236 |                 init_task: unsafe {up_safe_cell::new(tmp)},
+    |                            ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> src/task/task.rs:237:25
+    |
+209 | unsafe
+    | ------ because it's nested under this `unsafe` block
+...
+237 |                 tasks : unsafe {up_safe_cell::new(inner_task_manager)},
+    |                         ^^^^^^ unnecessary `unsafe` block
+
+warning: function is never used: `trampoline`
+  --> src/main.rs:32:5
+   |
+32 |     fn trampoline();
+   |     ^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: constant is never used: `SBI_CONSOLE_GETCHAR`
+ --> src/sbi.rs:4:1
+  |
+4 | const SBI_CONSOLE_GETCHAR: usize = 2;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `SBI_CLEAR_IPI`
+ --> src/sbi.rs:5:1
+  |
+5 | const SBI_CLEAR_IPI: usize = 3;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `SBI_SEND_IPI`
+ --> src/sbi.rs:6:1
+  |
+6 | const SBI_SEND_IPI: usize = 4;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `SBI_REMOTE_FENCE_I`
+ --> src/sbi.rs:7:1
+  |
+7 | const SBI_REMOTE_FENCE_I: usize = 5;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `SBI_REMOTE_SFENCE_VMA`
+ --> src/sbi.rs:8:1
+  |
+8 | const SBI_REMOTE_SFENCE_VMA: usize = 6;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `SBI_REMOTE_SFENCE_VMA_ASID`
+ --> src/sbi.rs:9:1
+  |
+9 | const SBI_REMOTE_SFENCE_VMA_ASID: usize = 7;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function is never used: `usertrap_end`
+  --> src/trap/mod.rs:24:5
+   |
+24 |     fn usertrap_end();
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: function is never used: `trapret_end`
+  --> src/trap/mod.rs:26:5
+   |
+26 |     fn trapret_end();
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: function is never used: `trampoline_end`
+  --> src/trap/mod.rs:27:5
+   |
+27 |     fn trampoline_end();
+   |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `READ`
+ --> src/syscall/mod.rs:7:1
+  |
+7 | const READ : usize = 63;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `GET_PID`
+  --> src/syscall/mod.rs:12:1
+   |
+12 | const GET_PID : usize = 172;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `FORK`
+  --> src/syscall/mod.rs:13:1
+   |
+13 | const FORK : usize = 220;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `EXEC`
+  --> src/syscall/mod.rs:14:1
+   |
+14 | const EXEC : usize = 221;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `WAIT_PID`
+  --> src/syscall/mod.rs:15:1
+   |
+15 | const WAIT_PID : usize = 260;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `APP_START`
+ --> src/config.rs:1:1
+  |
+1 | pub const APP_START : usize = 0x80400000;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `APP_MAXSIZE`
+ --> src/config.rs:2:1
+  |
+2 | pub const APP_MAXSIZE : usize = 0x20000;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `APP_MAX_COUNT`
+ --> src/config.rs:3:1
+  |
+3 | pub const APP_MAX_COUNT : usize = 3;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `KERNEL_STACK_SIZE`
+ --> src/config.rs:4:1
+  |
+4 | pub const KERNEL_STACK_SIZE : usize = 4096;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant is never used: `USER_STACK_SIZE`
+ --> src/config.rs:5:1
+  |
+5 | pub const USER_STACK_SIZE : usize = 4096;
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function is never used: `get_app_by_name`
+  --> src/loader.rs:75:8
+   |
+75 | pub fn get_app_by_name(target: &str) -> &'static [u8]
+   |        ^^^^^^^^^^^^^^^
+
+warning: function is never used: `outputentry`
+  --> src/mm/mod.rs:18:8
+   |
+18 | pub fn outputentry(ppn: PhyPage, level: usize, cur: usize)
+   |        ^^^^^^^^^^^
+
+warning: function is never used: `output_virpage_entry`
+  --> src/mm/mod.rs:40:8
+   |
+40 | pub fn output_virpage_entry(vpn: VirPage, pgt: PhyPage)
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: variant is never constructed: `Running`
+  --> src/task/task.rs:26:5
+   |
+26 |     Running,
+   |     ^^^^^^^
+   |
+note: `TaskStatus` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+  --> src/task/task.rs:21:16
+   |
+21 | #[derive(Copy, Clone, PartialEq, Eq)]
+   |                ^^^^^
+   = note: this warning originates in the derive macro `Clone` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: variant is never constructed: `Exited`
+  --> src/task/task.rs:28:5
+   |
+28 |     Exited,
+   |     ^^^^^^
+   |
+note: `TaskStatus` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+  --> src/task/task.rs:21:16
+   |
+21 | #[derive(Copy, Clone, PartialEq, Eq)]
+   |                ^^^^^
+   = note: this warning originates in the derive macro `Clone` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: associated function is never used: `fork_other`
+  --> src/task/task.rs:85:12
+   |
+85 |     pub fn fork_other(self: &Arc<Task>) -> Arc<Task>
+   |            ^^^^^^^^^^
+
+warning: associated function is never used: `exec`
+   --> src/task/task.rs:147:12
+    |
+147 |     pub fn exec(&self, app_name: &str)
+    |            ^^^^
+
+warning: associated function is never used: `get_ctx`
+   --> src/task/task.rs:168:12
+    |
+168 |     pub fn get_ctx(&mut self) -> &mut Context
+    |            ^^^^^^^
+
+warning: field is never read: `total`
+   --> src/task/task.rs:201:5
+    |
+201 |     total: usize,
+    |     ^^^^^^^^^^^^
+
+warning: associated function is never used: `clean_up_exited_task`
+   --> src/task/task.rs:276:8
+    |
+276 |     fn clean_up_exited_task(&self, other:Arc<Task>)
+    |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function is never used: `wait`
+   --> src/task/task.rs:286:12
+    |
+286 |     pub fn wait(&self, pid: isize) -> isize
+    |            ^^^^
+
+warning: associated function is never used: `index_of`
+   --> src/task/task.rs:341:8
+    |
+341 |     fn index_of(&self, target:& Arc<Task>) -> usize
+    |        ^^^^^^^^
+
+warning: function is never used: `fork`
+   --> src/task/task.rs:430:8
+    |
+430 | pub fn fork() -> usize
+    |        ^^^^
+
+warning: function is never used: `exec`
+   --> src/task/task.rs:448:8
+    |
+448 | pub fn exec(app_name: &str)
+    |        ^^^^
+
+warning: function is never used: `heap_test`
+  --> src/mm/heap_allocator.rs:28:8
+   |
+28 | pub fn heap_test()
+   |        ^^^^^^^^^
+
+warning: associated function is never used: `root_page`
+   --> src/mm/pagetable.rs:112:12
+    |
+112 |     pub fn root_page(&self) -> PhyPage
+    |            ^^^^^^^^^
+
+warning: associated function is never used: `unmap`
+   --> src/mm/pagetable.rs:188:12
+    |
+188 |     pub fn unmap(&mut self, vpn: VirPage)
+    |            ^^^^^
+
+warning: associated function is never used: `translate`
+   --> src/mm/pagetable.rs:200:12
+    |
+200 |     pub fn translate(&self, vpn: VirPage) -> Option<PageTableEntry>
+    |            ^^^^^^^^^
+
+warning: associated function is never used: `fork_one`
+  --> src/mm/memory_set.rs:44:12
+   |
+44 |     pub fn fork_one(&self) -> Self
+   |            ^^^^^^^^
+
+warning: associated function is never used: `travel`
+   --> src/mm/memory_set.rs:110:12
+    |
+110 |     pub fn travel(&self)
+    |            ^^^^^^
+
+warning: associated function is never used: `from_exist`
+   --> src/mm/memory_set.rs:151:12
+    |
+151 |     pub fn from_exist(exist: &MemArea) -> MemArea
+    |            ^^^^^^^^^^
+
+warning: associated function is never used: `copy_from_area`
+   --> src/mm/memory_set.rs:162:12
+    |
+162 |     pub fn copy_from_area(&mut self, other: &MemArea)
+    |            ^^^^^^^^^^^^^^
+
+warning: associated function is never used: `travel`
+   --> src/mm/memory_set.rs:172:12
+    |
+172 |     pub fn travel(&self, pgt:&PageTable)
+    |            ^^^^^^
+
+warning: associated function is never used: `unmap_page_for`
+   --> src/mm/memory_set.rs:221:12
+    |
+221 |     pub fn unmap_page_for(&mut self, pgt:&mut PageTable, vpn: VirPage)
+    |            ^^^^^^^^^^^^^^
+
+warning: associated function is never used: `clear`
+   --> src/mm/memory_set.rs:251:12
+    |
+251 |     pub fn clear(&mut self, pgt: &mut PageTable)
+    |            ^^^^^
+
+warning: function is never used: `copy_page`
+   --> src/mm/memory_set.rs:389:8
+    |
+389 | pub fn copy_page(dst: PhyPage, src: PhyPage)
+    |        ^^^^^^^^^
+
+warning: function is never used: `test`
+   --> src/mm/memory_set.rs:398:8
+    |
+398 | pub fn test()
+    |        ^^^^
+
+warning: `extern` block uses type `context::Context`, which is not FFI-safe
+  --> src/trap/mod.rs:25:21
+   |
+25 |     fn trapret(ptr: *mut Context);
+   |                     ^^^^^^^^^^^^ not FFI-safe
+   |
+   = note: `#[warn(improper_ctypes)]` on by default
+   = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+   = note: this struct has unspecified layout
+note: the type is defined here
+  --> src/trap/context.rs:6:1
+   |
+6  | / pub struct Context
+7  | | {
+8  | |     pub regs : [usize; 32],
+9  | |     pub sepc : usize,
+...  |
+14 | |     pub trapframe : usize, //in user addr
+15 | | }
+   | |_^
+
+warning: `extern` block uses type `TaskContext`, which is not FFI-safe
+   --> src/task/task.rs:245:22
+    |
+245 |     fn switch(saved: *mut TaskContext, loaded: *const TaskContext);
+    |                      ^^^^^^^^^^^^^^^^ not FFI-safe
+    |
+    = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+    = note: this struct has unspecified layout
+note: the type is defined here
+   --> src/task/task_context.rs:2:1
+    |
+2   | / pub struct TaskContext
+3   | | {
+4   | |     pub callee_save : [usize; 12],
+5   | |     pub sp : usize,
+6   | |     pub ra : usize,
+7   | | }
+    | |_^
+
+warning: `extern` block uses type `TaskContext`, which is not FFI-safe
+   --> src/task/task.rs:245:48
+    |
+245 |     fn switch(saved: *mut TaskContext, loaded: *const TaskContext);
+    |                                                ^^^^^^^^^^^^^^^^^^ not FFI-safe
+    |
+    = help: consider adding a `#[repr(C)]` or `#[repr(transparent)]` attribute to this struct
+    = note: this struct has unspecified layout
+note: the type is defined here
+   --> src/task/task_context.rs:2:1
+    |
+2   | / pub struct TaskContext
+3   | | {
+4   | |     pub callee_save : [usize; 12],
+5   | |     pub sp : usize,
+6   | |     pub ra : usize,
+7   | | }
+    | |_^
+
+warning: variable `index__zombie` should have a snake case name
+   --> src/task/task.rs:294:13
+    |
+294 |         let index__zombie = task_inner.childrens.iter().enumerate().find(
+    |             ^^^^^^^^^^^^^ help: convert the identifier to snake case: `index_zombie`
+    |
+    = note: `#[warn(non_snake_case)]` on by default
+
+warning: `kernel` (bin "kernel") generated 95 warnings
+    Finished dev [unoptimized + debuginfo] target(s) in 0.19s

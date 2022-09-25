@@ -6,14 +6,15 @@ mod memory_set;
 
 pub use heap_allocator::{init as heap_init, heap_test};
 pub use frame_allocator::{init as frame_init, alloc, FrameTracker};
-pub use pagetable::{PageTableEntry, PageTable, get_arr_from_userspace};
+pub use pagetable::{PageTableEntry, PageTable, get_arr_from_userspace, get_str_from_userspace};
 pub use addr::*;
-pub use memory_set::{to_prog, KERNEL_SPACE, MemorySet, kernel_mem_init, test};
+pub use memory_set::{to_prog, KERNEL_SPACE, MemorySet, kernel_mem_init, test, copy_page};
 use crate::config::TRAMPOLINE;
 pub use riscv::register::satp;
 pub use core::arch::asm;
 
-use self::pagetable::PteFlags;
+
+use self::pagetable::{PteFlags};
 
 pub fn outputentry(ppn: PhyPage, level: usize, cur: usize)
 {

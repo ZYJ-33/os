@@ -92,12 +92,12 @@ pub fn trap_handler()
         Trap::Exception(Exception::StoreFault) =>
         {
             println!("store fault");
-            exit();
+            exit(1);
         }
         Trap::Exception(Exception::IllegalInstruction) =>
         {
             println!("illegal inst");
-            exit();
+            exit(1);
         }
         Trap::Interrupt(Interrupt::SupervisorTimer) =>
         {
